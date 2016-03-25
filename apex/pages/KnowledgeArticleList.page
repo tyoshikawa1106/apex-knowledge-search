@@ -1,0 +1,72 @@
+<apex:page controller="KnowledgeArticleListController" sidebar="false" title="KnowledgeArticleList" id="page">
+    <!-- Lightning Design System -->
+    <apex:stylesheet value="{!URLFOR($Resource.SLDS100, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+    <!-- SLDS -->
+    <div class="slds">
+        <apex:form id="form">
+            <div class="slds-m-bottom--small">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-input-has-fixed-addon">
+                        <apex:inputText value="{!searchstring}" styleClass="slds-input" id="theSearchstring" maxlength="100" size="110" />
+                        <span class="slds-form-element__addon">
+                            <apex:commandButton value="Search" id="submitButton" styleClass="slds-button slds-button--brand" reRender="theSearchResults" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-bottom--small">
+                <apex:messages />
+            </div>
+            <div>
+                <apex:panelGroup id="theSearchResults" >
+                    <div>
+                        <table class="slds-table slds-table--bordered transmissionTable" cellpadding="0" cellspacing="0" border="0">
+                            <colGroup>
+                                <col width="300" />
+                                <col width="300" />
+                            </colGroup>
+                            <thead>
+                                <tr class="slds-text-heading--label">
+                                    <th>Title</th>
+                                    <th>Article Type</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <knowledge:articleList articleVar="article" pageNumber="{!currentPageNumber}" Keyword="{!searchstring}" hasMoreVar="false" pageSize="10" sortBy="title">
+                            <table class="slds-table slds-table--bordered transmissionTable" cellpadding="0" cellspacing="0" border="0">
+                                <colGroup>
+                                    <col width="300" />
+                                    <col width="300" />
+                                </colGroup>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <apex:outputLink target="_blank" value="{!URLFOR($Action.KnowledgeArticle.View, article.id,['popup' = 'true'])}">
+                                                <apex:outputText value="{!article.title}" />
+                                            </apex:outputLink>
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!article.articleTypeLabel}" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </knowledge:articleList>
+                    </div>
+                    <div class="slds-m-top--small">
+                        <section class="slds-clearfix">
+                            <div class="slds-float--left">
+                                <apex:commandLink action="{!previous}" value="Previous" styleClass="slds-button slds-button--neutral slds-button--small"
+                                                            style="{!IF(prevRequired = true,'display:block','display:none')}" reRender="theSearchResults"/> 
+                            </div>
+                            <div class="slds-float--right">
+                                <apex:commandLink action="{!next}" value="Next" styleClass="slds-button slds-button--neutral slds-button--small"
+                                                        style="{!IF(nextRequired = true,'display:block','display:none')}" reRender="theSearchResults"/> 
+                            </div>
+                        </section>
+                    </div>
+                </apex:panelGroup>
+            </div>
+        </apex:form>
+    </div>
+</apex:page>
